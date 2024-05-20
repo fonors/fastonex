@@ -1,6 +1,22 @@
 #!/usr/bin/env python3
+'''
+    FASTA to Leave NEXUS Converter - Convert a FASTA file into Leave NEXUS
+    Copyright (C) 2024  fonors, goncalof21, MadalenaFranco2 & scmdcunha
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+'''
 import argparse
-from sys import stderr, exit
 
 parser = argparse.ArgumentParser(
                     prog = 'FASTA to NEXUS Converter',
@@ -42,14 +58,16 @@ def nexus_data(seqdict):
     for seq in seqdict:
         seqlist.append(seqdict[seq])
     maxseqlen = max(len(seq) for seq in seqlist)
-    nexus_header = nexus_header + f"DIMENSIONS NTAX={str(len(seqdict))} NCHAR={str(maxseqlen))};\n"
+    nexus_header = nexus_header + f"DIMENSIONS NTAX={str(len(seqdict))} NCHAR={str(maxseqlen)};\n"
 
-    for seq in seq_dict:
-        current_sequence = seq_dict[seq].upper()
+    for seq in seqdict:
+        current_sequence = seqdict[seq].upper()
         if "U" in current_sequence:
-            nexus_header = nexus_header + "FORMAT DATATYPE=RNA MISSING=N GAP=-;\n"
+            datatype = "FORMAT DATATYPE=RNA MISSING=N GAP=-;\n"
         elif "T" in current_sequence:
-            nexus_header = nexus_header + "FORMAT DATATYPE=DNA MISSING=N GAP=-;\n"
+            datatype = "FORMAT DATATYPE=DNA MISSING=N GAP=-;\n"
+
+    nexus_header = nexus_header + datatype
 
     return nexus_header
 
@@ -66,7 +84,7 @@ def nexus_matrix(seqdict):
     for seq in seqdict:
         if len(seqdict[seq]) < maxseqlen:
             ngaps = maxseqlen - len(seqdict[seq])
-            nexus_matrix_block = nexus_matrix_block + f"{seq}     {seqdict[seq]}")
+            nexus_matrix_block = nexus_matrix_block + f"{seq}     {seqdict[seq]}"
             for gaps in range(ngaps):
                 nexus_matrix_block = nexus_matrix_block + "-"
             nexus_matrix_block = nexus_matrix_block + "\n"
@@ -77,7 +95,7 @@ def nexus_matrix(seqdict):
 
     return nexus_matrix_block
 
-if __init__ == "__name__":
+if __name__ == "__main__":
     user_args = user_args(parser)
     seq_dict = fasta_todict(user_args.input)
     output = nexus_data(seq_dict)
