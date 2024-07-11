@@ -51,14 +51,7 @@ def nexus_data(seqdict):
     """
     Takes a dictionary containing sequences and returns the NEXUS DATA header.
     """
-    nexus_header = "#NEXUS\n\n"
-    nexus_header = nexus_header + "BEGIN DATA;\n"
-
-    seqlist = []
-    for seq in seqdict:
-        seqlist.append(seqdict[seq])
-    maxseqlen = max(len(seq) for seq in seqlist)
-    nexus_header = nexus_header + f"DIMENSIONS NTAX={str(len(seqdict))} NCHAR={str(maxseqlen)};\n"
+    nexus_header = "#NEXUS\n\nBEGIN DATA;\n"
 
     for seq in seqdict:
         current_sequence = seqdict[seq].upper()
@@ -67,7 +60,8 @@ def nexus_data(seqdict):
         elif "T" in current_sequence:
             datatype = "FORMAT DATATYPE=DNA MISSING=N GAP=-;\n"
 
-    nexus_header = nexus_header + datatype
+    maxseqlen = max(len(seq) for seq in seqdict)
+    nexus_header = nexus_header + f"DIMENSIONS NTAX={str(len(seqdict))} NCHAR={str(maxseqlen)};\n" + datatype
 
     return nexus_header
 
@@ -75,12 +69,9 @@ def nexus_matrix(seqdict):
     """
     Takes a dictionary containing sequences and returns the NEXUS MATRIX block.
     """
-    seqlist = []
-    for seq in seqdict:
-        seqlist.append(seqdict[seq])
-    maxseqlen = max(len(seq) for seq in seqlist)
-
     nexus_matrix_block = "MATRIX\n\n"
+    maxseqlen = max(len(seq) for seq in seqdict)
+
     for seq in seqdict:
         if len(seqdict[seq]) < maxseqlen:
             ngaps = maxseqlen - len(seqdict[seq])

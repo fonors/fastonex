@@ -24,7 +24,7 @@ def test_fastatodict():
     """
     Unit test that determines if a FASTA formatted file can be successfully converted into Leave NEXUS.
     """
-    known_input = ">Seq 1\nATGC\n>Seq 2\nATG"
+    known_input = ">Seq 1\nAT\nGC\n>Seq 2\nATG"
     expected_output = {"Seq 1": "atgc", "Seq 2": "atg"}
 
     with tempfile.NamedTemporaryFile(delete=False, mode="w") as tp:
@@ -38,16 +38,16 @@ def test_nexus_data():
     """
     Unit test that determines if a Leave NEXUS DATA header can be determined from a sequence dictionary.
     """
-    seqdict = {"Seq1": "atgc", "Seq2": "atg"}
+    known_input = {"Seq1": "atgc", "Seq2": "atg"}
     expected_output = "#NEXUS\n\nBEGIN DATA;\nDIMENSIONS NTAX=2 NCHAR=4;\nFORMAT DATATYPE=DNA MISSING=N GAP=-;\n"
 
-    assert fastonex.nexus_data(seqdict) == expected_output
+    assert fastonex.nexus_data(known_input) == expected_output
 
 def test_nexus_matrix():
     """
     Unit test that determines if a Leave NEXUS MATRIX block can be determined from a sequence dictionary.
     """
-    know_input = {"Seq1" : "atgc", "Seq2" : "atg-"}
+    known_input = {"Seq1" : "atgc", "Seq2" : "atg-"}
     expected_output = "MATRIX\n\nSeq1     atgc\nSeq2     atg-\n;\n\nEND;"
 
-    assert fastonex.nexus_matrix(know_input) == expected_output
+    assert fastonex.nexus_matrix(known_input) == expected_output
