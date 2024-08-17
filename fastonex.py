@@ -17,6 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 import argparse
+from sys import stderr, exit
 
 parser = argparse.ArgumentParser(
                     prog = 'FASTA to NEXUS Converter',
@@ -56,6 +57,9 @@ def nexus_data(seqdict):
             datatype = "FORMAT DATATYPE=RNA MISSING=N GAP=-;\n"
         elif "t" in seqdict[seq]:
             datatype = "FORMAT DATATYPE=DNA MISSING=N GAP=-;\n"
+        else:
+            print("The sequences provided aren't valid DNA or RNA sequences. Make sure your sequences only have the characters \"ATGC\" or \"AUGC\".", file=stderr)
+            exit()
 
     maxseqlen = max(len(seqdict[seq]) for seq in seqdict)
     nexus_header = f"#NEXUS\n\nBEGIN DATA;\nDIMENSIONS NTAX={str(len(seqdict))} NCHAR={str(maxseqlen)};\n" + datatype
