@@ -55,8 +55,10 @@ def nexus_data(seqdict):
     for seq in seqdict:
         if "u" in seqdict[seq]:
             datatype = "FORMAT DATATYPE=RNA MISSING=N GAP=-;\n"
+            break
         elif "t" in seqdict[seq]:
             datatype = "FORMAT DATATYPE=DNA MISSING=N GAP=-;\n"
+            break
         else:
             print("The sequences provided aren't valid DNA or RNA sequences. Make sure your sequences only have the characters \"ATGC\" or \"AUGC\".", file=stderr)
             exit()
