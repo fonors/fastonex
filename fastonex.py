@@ -67,7 +67,7 @@ def nexus_matrix(seqdict):
     Takes a dictionary containing sequences and returns the NEXUS MATRIX block.
     """
     nexus_matrix_block = "MATRIX\n\n"
-    maxseqlen = max(len(seq) for seq in seqdict)
+    maxseqlen = max(len(seqdict[seq]) for seq in seqdict)
 
     for seq in seqdict:
         if len(seqdict[seq]) < maxseqlen:

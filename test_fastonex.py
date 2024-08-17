@@ -47,7 +47,7 @@ def test_nexus_matrix():
     """
     Unit test that determines if a Leave NEXUS MATRIX block can be determined from a sequence dictionary.
     """
-    known_input = {"Seq1" : "atgc", "Seq2" : "atg-"}
-    expected_output = "MATRIX\n\nSeq1     atgc\nSeq2     atg-\n;\n\nEND;"
+    known_input = {"Seq1" : "atgcatg", "Seq2" : "atg----"}
+    expected_output = "MATRIX\n\nSeq1     atgcatg\nSeq2     atg----\n;\n\nEND;"
 
     assert fastonex.nexus_matrix(known_input) == expected_output
