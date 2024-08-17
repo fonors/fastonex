@@ -51,17 +51,14 @@ def nexus_data(seqdict):
     """
     Takes a dictionary containing sequences and returns the NEXUS DATA header.
     """
-    nexus_header = "#NEXUS\n\nBEGIN DATA;\n"
-
     for seq in seqdict:
-        current_sequence = seqdict[seq].upper()
-        if "U" in current_sequence:
+        if "u" in seqdict[seq]:
             datatype = "FORMAT DATATYPE=RNA MISSING=N GAP=-;\n"
-        elif "T" in current_sequence:
+        elif "t" in seqdict[seq]:
             datatype = "FORMAT DATATYPE=DNA MISSING=N GAP=-;\n"
 
-    maxseqlen = max(len(seq) for seq in seqdict)
-    nexus_header = nexus_header + f"DIMENSIONS NTAX={str(len(seqdict))} NCHAR={str(maxseqlen)};\n" + datatype
+    maxseqlen = max(len(seqdict[seq]) for seq in seqdict)
+    nexus_header = f"#NEXUS\n\nBEGIN DATA;\nDIMENSIONS NTAX={str(len(seqdict))} NCHAR={str(maxseqlen)};\n" + datatype
 
     return nexus_header
 
@@ -75,20 +72,18 @@ def nexus_matrix(seqdict):
     for seq in seqdict:
         if len(seqdict[seq]) < maxseqlen:
             ngaps = maxseqlen - len(seqdict[seq])
-            nexus_matrix_block = nexus_matrix_block + f"{seq}     {seqdict[seq]}"
+            nexus_matrix_block += f"{seq}     {seqdict[seq]}"
             for gaps in range(ngaps):
-                nexus_matrix_block = nexus_matrix_block + "-"
-            nexus_matrix_block = nexus_matrix_block + "\n"
+                nexus_matrix_block += "-"
+            nexus_matrix_block += "\n"
         else:
-            nexus_matrix_block = nexus_matrix_block + f"{seq}     {seqdict[seq]}\n"
-    nexus_matrix_block = nexus_matrix_block + ";\n"
-    nexus_matrix_block = nexus_matrix_block + "\nEND;"
+            nexus_matrix_block += f"{seq}     {seqdict[seq]}\n"
+    nexus_matrix_block += ";\n\nEND;"
 
     return nexus_matrix_block
 
 if __name__ == "__main__":
     user_args = user_args(parser)
     seq_dict = fasta_todict(user_args.input)
-    output = nexus_data(seq_dict)
-    output = output + nexus_matrix(seq_dict)
+    output = nexus_data(seq_dict) + nexus_matrix(seq_dict)
     print(output)

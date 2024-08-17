@@ -38,8 +38,8 @@ def test_nexus_data():
     """
     Unit test that determines if a Leave NEXUS DATA header can be determined from a sequence dictionary.
     """
-    known_input = {"Seq1": "atgc", "Seq2": "atg"}
-    expected_output = "#NEXUS\n\nBEGIN DATA;\nDIMENSIONS NTAX=2 NCHAR=4;\nFORMAT DATATYPE=DNA MISSING=N GAP=-;\n"
+    known_input = {"Seq1": "atgcatg", "Seq2": "atg"}
+    expected_output = "#NEXUS\n\nBEGIN DATA;\nDIMENSIONS NTAX=2 NCHAR=7;\nFORMAT DATATYPE=DNA MISSING=N GAP=-;\n"
 
     assert fastonex.nexus_data(known_input) == expected_output
 
